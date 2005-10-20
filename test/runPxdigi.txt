@@ -1,0 +1,39 @@
+process PROD = {
+
+source = EmptySource { 
+	       int32 maxEvents = 4	
+	}
+        es_source = XMLIdealGeometryESSource {string
+GeometryConfiguration="allConfiguration.xml"}
+        es_module = TrackerGeometricDetESModule {}
+        es_module = TrackerDigiGeometryESModule {}
+	module prova =  SiPixelDigitizer {
+           string SimProducer = "SimDigitizer"	
+           double ElectronPerAdc = 135.0 
+	   int32 AdcFullScale = 255
+	   double ThresholdInNoiseUnits = 5.
+	   double TofCut = 12.5	  
+	   int32 AddPixelInefficiency = 0
+	   bool AddNoise = true
+	   bool AddNoisyPixels = true
+           double DeltaProductionCut= 0.030 
+	   bool FluctuateCharge = true
+	   int32 addPixelInefficiency = 0
+           double PixelEff = -1.0
+           double PixelColEff = -1.0
+           double PixelChipEff = -1.0	   
+	   bool MissCalibrate = false
+	   double GainSmearing = 0.0
+	   double OffsetSmearing = 0.0
+	   int32 PixelROCRows = 80	   
+	   int32 PixelROCCols = 52
+
+
+	   untracked int32 VerbosityLevel = 0		 
+	}
+               module out = PoolOutputModule {
+               untracked string fileName = 'pixdigi.root'
+        }
+                                                                                                             
+	path p = {prova,out}
+}
