@@ -4,10 +4,10 @@ source = EmptySource {
 	       int32 maxEvents = 4	
 	}
         es_source = XMLIdealGeometryESSource {string
-GeometryConfiguration="allConfiguration.xml"}
+GeometryConfiguration="testConfiguration.xml"}
         es_module = TrackerGeometricDetESModule {}
         es_module = TrackerDigiGeometryESModule {}
-	module prova =  SiPixelDigitizer {
+	module pixdigi =  SiPixelDigitizer {
            string SimProducer = "SimDigitizer"	
            double ElectronPerAdc = 135.0 
 	   int32 AdcFullScale = 255
@@ -35,5 +35,5 @@ GeometryConfiguration="allConfiguration.xml"}
                untracked string fileName = 'pixdigi.root'
         }
                                                                                                              
-	path p = {prova,out}
+	path p = {pixdigi,out}
 }
