@@ -1,10 +1,16 @@
 process PROD = {
 
-source = EmptySource { 
-	       int32 maxEvents = 4	
+	source = PoolSource { 
+          untracked string fileName = 'simevent.root'
+          untracked int32 maxEvents = 5
+          untracked uint32 debugVebosity = 10
+          untracked bool   debugFlag     = true
 	}
-        es_source = XMLIdealGeometryESSource {string
-GeometryConfiguration="testConfiguration.xml"}
+
+        es_module = VolumeBasedMagneticFieldESProducer {}
+        es_source = XMLIdealGeometryESSource {FileInPath
+           GeometryConfiguration="SimTracker/SiPixelDigitizer/test/testConfiguration.xml"
+           string rootNodeName = ""}
         es_module = TrackerGeometricDetESModule {}
         es_module = TrackerDigiGeometryESModule {}
 	module pixdigi =  SiPixelDigitizer {
@@ -31,9 +37,8 @@ GeometryConfiguration="testConfiguration.xml"}
 
 	   untracked int32 VerbosityLevel = 0		 
 	}
-               module out = PoolOutputModule {
+       module out = PoolOutputModule {
                untracked string fileName = 'pixdigi.root'
         }
-                                                                                                             
 	path p = {pixdigi,out}
 }
