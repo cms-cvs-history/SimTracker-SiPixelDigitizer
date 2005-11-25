@@ -19,6 +19,7 @@ process PROD = {
 	   int32 AdcFullScale = 255
 	   double ThresholdInNoiseUnits = 5.
 	   double TofCut = 12.5	  
+           double TanLorentzAnglePerTesla =0.106
 	   int32 AddPixelInefficiency = 0
 	   bool AddNoise = true
 	   bool AddNoisyPixels = true
