@@ -7,7 +7,18 @@ process PROD = {
           untracked bool   debugFlag     = true
 	}
 
-        es_module = VolumeBasedMagneticFieldESProducer {}
+	es_source magfield = XMLIdealGeometryESSource {
+		  FileInPath GeometryConfiguration ="SimG4Core/Application/test/FieldConfiguration.xml"
+		  #the proper root node is set in the xml file
+		  string rootNodeName=""
+		}
+        es_module = VolumeBasedMagneticFieldESProducer {
+ 	           double findVolumeTolerance = 0.0
+ 	           untracked bool cacheLastVolume = true
+	           untracked bool timerOn = false
+		}
+
+
         es_source = XMLIdealGeometryESSource {FileInPath
            GeometryConfiguration="SimTracker/SiPixelDigitizer/test/testConfiguration.xml"
            string rootNodeName = ""}

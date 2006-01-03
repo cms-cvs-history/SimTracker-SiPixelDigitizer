@@ -159,26 +159,36 @@
       <File name="Geometry/TrackerCommonData/data/tecmodpar.xml"		        url="."/>
       <File name="Geometry/TrackerCommonData/data/tecmaterial.xml"		        url="."/>
       <File name="Geometry/TrackerCommonData/data/tecConfiguration.xml"	        url="."/>	       
-      <File name="Geometry/TrackerCommonData/data/pixfwdplaq.xml"		        url="."/>
-      <File name="Geometry/TrackerCommonData/data/pixfwdplaq2x5.xml"		        url="."/>
-      <File name="Geometry/TrackerCommonData/data/pixfwdplaq2x4.xml"		        url="."/>
-      <File name="Geometry/TrackerCommonData/data/pixfwdplaq2x3.xml"		        url="."/>
-      <File name="Geometry/TrackerCommonData/data/pixfwdplaq1x5.xml"		        url="."/>
-      <File name="Geometry/TrackerCommonData/data/pixfwdplaq1x2.xml"		        url="."/>
+      <File name="Geometry/TrackerCommonData/data/pixbarConfiguration.xml"		        url="."/>
+      <File name="Geometry/TrackerCommonData/data/pixbarladderfull.xml"		        url="."/>
+      <File name="Geometry/TrackerCommonData/data/pixbarladderhalf.xml"		        url="."/>
+      <File name="Geometry/TrackerCommonData/data/pixbarladder.xml"		        url="."/>
+      <File name="Geometry/TrackerCommonData/data/pixbarlayer0.xml"		        url="."/>
+      <File name="Geometry/TrackerCommonData/data/pixbarlayer1.xml"		        url="."/>
+      <File name="Geometry/TrackerCommonData/data/pixbarlayer2.xml"		        url="."/>
+      <File name="Geometry/TrackerCommonData/data/pixbarlayer.xml"		        url="."/>
+      <File name="Geometry/TrackerCommonData/data/pixbarmaterial.xml"		        url="."/>
+      <File name="Geometry/TrackerCommonData/data/pixbar.xml"		        url="."/>
+      <File name="Geometry/TrackerCommonData/data/pixfwdBlade.xml"		        url="."/>
+      <File name="Geometry/TrackerCommonData/data/pixfwdConfiguration.xml"		        url="."/>
+      <File name="Geometry/TrackerCommonData/data/pixfwdCylinder.xml"		        url="."/>
+      <File name="Geometry/TrackerCommonData/data/pixfwdDisk.xml"		        url="."/>
+      <File name="Geometry/TrackerCommonData/data/pixfwdMaterials.xml"		        url="."/>
+      <File name="Geometry/TrackerCommonData/data/pixfwdPanelBase.xml"		        url="."/>
       <File name="Geometry/TrackerCommonData/data/pixfwdPanel.xml"		        url="."/>
-      <File name="Geometry/TrackerCommonData/data/pixfwdPanelSave.xml"	        url="."/>	       
-      <File name="Geometry/TrackerCommonData/data/pixfwdPanel4RX.xml"	        url="."/>	       
-      <File name="Geometry/TrackerCommonData/data/pixfwdPanel3LX.xml"	        url="."/>	       
-      <File name="Geometry/TrackerCommonData/data/pixfwdmaterial.xml"	        url="."/>	       
-      <File name="Geometry/TrackerCommonData/data/pixfwdConfiguration.xml"	        url="."/>
-      <File name="Geometry/TrackerCommonData/data/pixbarConfiguration.xml"	        url="."/>
+      <File name="Geometry/TrackerCommonData/data/pixfwdplaq1x2Left.xml"		        url="."/>
+      <File name="Geometry/TrackerCommonData/data/pixfwdplaq1x2Right.xml"		        url="."/>
+      <File name="Geometry/TrackerCommonData/data/pixfwdplaq1x5Left.xml"		        url="."/>
+      <File name="Geometry/TrackerCommonData/data/pixfwdplaq1x5Right.xml"		        url="."/>
+      <File name="Geometry/TrackerCommonData/data/pixfwdplaq2x3.xml"		        url="."/>
+      <File name="Geometry/TrackerCommonData/data/pixfwdplaq2x4.xml"		        url="."/>
+      <File name="Geometry/TrackerCommonData/data/pixfwdplaq2x5.xml"		        url="."/>
+      <File name="Geometry/TrackerCommonData/data/pixfwdplaq.xml"		        url="."/>
+      <File name="Geometry/TrackerCommonData/data/pixfwdTest.xml"		        url="."/>
+      <File name="Geometry/TrackerCommonData/data/pixfwd.xml"		        url="."/>
       <File name="Geometry/TrackerCommonData/data/trackerStructureTopology.xml"      url= "."/>
       <File name="Geometry/TrackerSimData/data/trackersens.xml"                      url="."/>   
       <File name="Geometry/TrackerSimData/data/trackerProdCuts.xml"                  url="."/>
-       <File name="../../../../Geometry/Geometry_1_19_2/src/CMS/CMSGeometry/cms.xml"   url="."/>
-      <File name="../../../../Geometry/Geometry_1_19_2/src/Materials/materials.xml"   url="."/>  
-      <File name="../../../../Geometry/Geometry_1_19_2/src/Rotations/rotations.xml"   url="."/>
-      <File name="../../../../Geometry/Geometry_1_19_2/src/MagneticField/MagneticFieldVolumes.xml"   url="."/>
 									        
  </Include>								        
  <Root fileName="cms.xml"          logicalPartName="OCMS"/>		        
