@@ -12,7 +12,9 @@ process PROD = {
 		  #the proper root node is set in the xml file
 		  string rootNodeName=""
 		}
-        service = MessageLogger { }	
+        service = MessageLogger {  vstring destinations   = { "debugmessages.txt" }
+ PSet debugmessages.txt = { string threshold = "DEBUG"}
+}
         es_module = VolumeBasedMagneticFieldESProducer {
  	           double findVolumeTolerance = 0.0
  	           untracked bool cacheLastVolume = true
@@ -25,9 +27,7 @@ process PROD = {
            string rootNodeName = ""}
         es_module = TrackerGeometricDetESModule {}
         es_module = TrackerDigiGeometryESModule {}
-	module pixdigi =  SiPixelDigitizer {
-	   untracked int32 VerbosityLevel = 0		 
-	}
+	module pixdigi =  SiPixelDigitizer {	}
        module out = PoolOutputModule {
                untracked string fileName = 'pixdigi.root'
         }
