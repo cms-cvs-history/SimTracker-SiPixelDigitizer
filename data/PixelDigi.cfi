@@ -3,6 +3,7 @@
 	double ThresholdInNoiseUnits = 5.
         double TanLorentzAnglePerTesla =0.106
         int32 AddPixelInefficiency = 0	
+        bool AddNoise = true
         bool AddNoisyPixels = true
         bool MissCalibrate = false
         double GainSmearing = 0.0
