@@ -1,4 +1,6 @@
 	module pixdigi =  SiPixelDigitizer { 
+	vstring ROUList = {"TrackerHitsPixelBarrelLowTof","TrackerHitsPixelBarrelHighTof",
+	"TrackerHitsPixelEndcapLowTof","TrackerHitsPixelEndcapHighTof"}
 	double ElectronPerAdc=135.0
 	double ThresholdInNoiseUnits = 5.
         double TanLorentzAnglePerTesla =0.106
