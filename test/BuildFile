@@ -22,9 +22,13 @@
 #<library file="PixelDigisTest.cc" name="PixelDigisTest">
 #</library>
 
-<flags SEAL_PLUGIN_NAME="PixelMixedSimHitsTest">
-<library file="PixelMixedSimHitsTest.cc" name="PixelMixedSimHitsTest">
+<flags SEAL_PLUGIN_NAME="PixelSimHitsTest">
+<library file="PixelSimHitsTest.cc" name="PixelSimHitsTest">
 </library>
+
+#<flags SEAL_PLUGIN_NAME="PixelMixedSimHitsTest">
+#<library file="PixelMixedSimHitsTest.cc" name="PixelMixedSimHitsTest">
+#</library>
 
 #<flags SEAL_PLUGIN_NAME="PixelSimHitsTestForward">
 #<library file="PixelSimHitsTestForward.cc" name="PixelSimHitsTestForward">
