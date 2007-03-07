@@ -2,7 +2,7 @@
 	vstring ROUList = {"TrackerHitsPixelBarrelLowTof","TrackerHitsPixelBarrelHighTof",
 	"TrackerHitsPixelEndcapLowTof","TrackerHitsPixelEndcapHighTof"}
 	double ElectronPerAdc=135.0
-	double ThresholdInNoiseUnits = 5.
+	double ThresholdInElectrons = 2500.
         double TanLorentzAnglePerTesla =0.106
         int32 AddPixelInefficiency = 0	
         bool AddNoise = true
@@ -10,6 +10,6 @@
         bool MissCalibrate = true
         double GainSmearing = 0.0
         double OffsetSmearing = 0.0
-        double NoiseInElectrons =500.0
+        double NoiseInElectrons =175.0
         bool  Alpha2Order = true
 	}

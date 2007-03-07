@@ -18,13 +18,13 @@
 <use name=FWCore/ParameterSet>
 
 
-#<flags SEAL_PLUGIN_NAME="PixelDigisTest">
-#<library file="PixelDigisTest.cc" name="PixelDigisTest">
-#</library>
-
-<flags SEAL_PLUGIN_NAME="PixelSimHitsTest">
-<library file="PixelSimHitsTest.cc" name="PixelSimHitsTest">
+<flags SEAL_PLUGIN_NAME="PixelDigisTest">
+<library file="PixelDigisTest.cc" name="PixelDigisTest">
 </library>
+
+#<flags SEAL_PLUGIN_NAME="PixelSimHitsTest">
+#<library file="PixelSimHitsTest.cc" name="PixelSimHitsTest">
+#</library>
 
 #<flags SEAL_PLUGIN_NAME="PixelMixedSimHitsTest">
 #<library file="PixelMixedSimHitsTest.cc" name="PixelMixedSimHitsTest">
