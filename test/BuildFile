@@ -17,18 +17,19 @@
 <use name=FWCore/ParameterSet>
 
 
-<flags EDM_PLUGIN=1>
 <library file="PixelDigisTest.cc" name="PixelDigisTest">
+<flags EDM_PLUGIN=1>
 </library>
 
 #<flags EDM_PLUGIN=1>
 #<library file="PixelSimHitsTest.cc" name="PixelSimHitsTest">
 #</library>
-
+#
 #<flags EDM_PLUGIN=1>
 #<library file="PixelMixedSimHitsTest.cc" name="PixelMixedSimHitsTest">
 #</library>
 
+#
 #<flags EDM_PLUGIN=1>
 #<library file="PixelSimHitsTestForward.cc" name="PixelSimHitsTestForward">
 #</library>
