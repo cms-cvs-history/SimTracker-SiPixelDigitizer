@@ -11,5 +11,7 @@
         double GainSmearing = 0.0
         double OffsetSmearing = 0.0
         double NoiseInElectrons =175.0
+        double TofLowerCut = -12.5
+        double TofUpperCut = 12.5
         bool  Alpha2Order = true
 	}

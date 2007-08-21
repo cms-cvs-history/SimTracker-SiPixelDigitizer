@@ -210,7 +210,11 @@ class SiPixelDigitizerAlgorithm  {
                                  //inludes DCOL-Amp,TBM-Amp, Alt, AOH,OptRec.
     float thePixelThreshold;     // Pixel threshold in units of noise.
     float thePixelThresholdInE;  // Pixel noise in electrons.
-    float theTofCut;             // Cut on the particle TOF
+
+    //hxt float theTofCut;             // Cut on the particle TOF
+    float theTofLowerCut;             // Cut on the particle TOF
+    float theTofUpperCut;             // Cut on the particle TOF
+
     float tanLorentzAnglePerTesla;   //Lorentz angle tangent per Tesla
     //-- add_noise
     bool addNoise;

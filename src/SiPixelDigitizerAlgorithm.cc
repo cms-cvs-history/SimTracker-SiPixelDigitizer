@@ -89,7 +89,9 @@ SiPixelDigitizerAlgorithm::SiPixelDigitizerAlgorithm(const edm::ParameterSet& co
 
 
   //theTofCut 12.5, cut in particle TOD +/- 12.5ns
-  theTofCut=conf_.getUntrackedParameter<double>("TofCut",12.5);
+  //hxt theTofCut=conf_.getUntrackedParameter<double>("TofCut",12.5);
+  theTofLowerCut=conf_.getParameter<double>("TofLowerCut");
+  theTofUpperCut=conf_.getParameter<double>("TofUpperCut"); 
 
   //Lorentz angle tangent per Tesla
   tanLorentzAnglePerTesla=conf_.getParameter<double>("TanLorentzAnglePerTesla");
@@ -404,15 +406,28 @@ vector<PixelDigi> SiPixelDigitizerAlgorithm::digitize(PixelGeomDetUnit *det){
       
       _collection_points.clear();  // Clear the container
       // fill _collection_points for this SimHit, indpendent of topology
-      if (std::abs( (*ssbegin).tof() )<theTofCut){
+
+
+      // Check the TOF cut
+     if ( ((*ssbegin).tof() >= theTofLowerCut) && ((*ssbegin).tof() <= theTofUpperCut) ) {
+        primary_ionization(*ssbegin); // fills _ionization_points
+        drift(*ssbegin);  // transforms _ionization_points to _collection_points
+        induce_signal(*ssbegin); // *ihit needed only for SimHit<-->Digi link
+       } //  end if
+     } //end for
+
+
+/*hxt
+   if (std::abs( (*ssbegin).tof() )<theTofCut){
 	primary_ionization(*ssbegin); // fills _ionization_points
 	
 	drift(*ssbegin);  // transforms _ionization_points to _collection_points  
 	
 	// compute induced signal on readout elements and add to _signal
-	induce_signal(*ssbegin); //*ihit needed only for SimHit<-->Digi link
+	induce_signal(*ssbegin); //ihit needed only for SimHit<-->Digi link
 				     }
     }
+hxt*/
 
     if(addNoise) add_noise();  // generate noise
     // Do only if needed 
