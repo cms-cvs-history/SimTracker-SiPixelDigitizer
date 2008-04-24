@@ -1,4 +1,4 @@
-	module siPixelDigis =  SiPixelDigitizer { 
+	module simSiPixelDigis =  SiPixelDigitizer { 
 	vstring ROUList = {"TrackerHitsPixelBarrelLowTof","TrackerHitsPixelBarrelHighTof",
 	"TrackerHitsPixelEndcapLowTof","TrackerHitsPixelEndcapHighTof"}
 	double ElectronPerAdc = 135.0
