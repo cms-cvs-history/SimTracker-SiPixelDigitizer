@@ -17,4 +17,6 @@
 	double TofLowerCut = -12.5
 	double TofUpperCut = 12.5
 	int32 AdcFullScale = 255
+
+        bool useDB = false
 	}
