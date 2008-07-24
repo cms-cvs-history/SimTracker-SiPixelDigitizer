@@ -227,6 +227,8 @@ class SiPixelDigitizerAlgorithm  {
     
     int numColumns; // number of pixel columns in a module (detUnit)
     int numRows;    // number          rows
+    int numROCX;
+    int numROCY;
     float moduleThickness; // sensor thickness 
     //  int digis; 
     const PixelGeomDetUnit* _detp;
