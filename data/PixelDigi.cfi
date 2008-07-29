@@ -6,7 +6,8 @@
     "g4SimHitsTrackerHitsPixelEndcapHighTof"}
 	double ElectronPerAdc = 135.0
 	double ThresholdInElectrons = 2500.
-        double TanLorentzAnglePerTesla = 0.106
+        double TanLorentzAnglePerTesla_FPix = 0.0912
+        double TanLorentzAnglePerTesla_BPix = 0.106
         int32 AddPixelInefficiency = 0	
         bool AddNoise = true
         bool AddNoisyPixels = true
