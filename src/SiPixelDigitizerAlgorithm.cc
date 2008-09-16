@@ -19,7 +19,7 @@
 // Modify to the new random number services. d.k. 5/07
 // Protect against sigma=0 (delta tracks on the surface). d.k.5/07
 // Change the TOF cut to lower and upper limit. d.k. 7/07
- 
+  
 #include <vector>
 #include <iostream>
 
@@ -58,6 +58,16 @@ SiPixelDigitizerAlgorithm::SiPixelDigitizerAlgorithm(const edm::ParameterSet& co
   GeVperElectron = 3.61E-09; //1 electrons=3.61eV, 1keV=277e, mod 9/06 d.k.
   Sigma0 = 0.00037;           // Charge diffusion constant 7->3.7 
   Dist300 = 0.0300;          //   normalized to 300micron Silicon
+  //
+  // Numbers of Layers
+  NumberOfBarrelLayers = conf_.getParameter<int>("NumPixelBarrel");   
+  NumberOfEndcapDisks  = conf_.getParameter<int>("NumPixelEndcap");
+
+  cout << "Number of Pixel Barrel Layer " << NumberOfBarrelLayers << endl;
+  //  NumberOfBarrelLayers = 8;
+  //  NumberOfEndcapDisks = 3;
+
+  NumberOfTotLayers = NumberOfBarrelLayers + NumberOfEndcapDisks;
 
   alpha2Order = conf_.getParameter<bool>("Alpha2Order");   // switch on/off of E.B effect   
 
@@ -122,7 +132,7 @@ SiPixelDigitizerAlgorithm::SiPixelDigitizerAlgorithm(const edm::ParameterSet& co
   // the next  3 settings [3],[4],[5] are for the endcaps (undecided how)  
   if (thePixelLuminosity==-1) {  // No indefficiency, all 100% efficient
     pixelInefficiency=false;
-    for (int i=0; i<6;i++) {
+    for (int i=0; i<NumberOfTotLayers;i++) {
       thePixelEfficiency[i]     = 1.;  // pixels = 100%
       thePixelColEfficiency[i]  = 1.;  // columns = 100%
       thePixelChipEfficiency[i] = 1.; // chips = 100%
@@ -133,8 +143,8 @@ SiPixelDigitizerAlgorithm::SiPixelDigitizerAlgorithm(const edm::ParameterSet& co
   } else if (thePixelLuminosity==0) { // static effciency
     pixelInefficiency=true;
     // Default efficiencies 
-    for (int i=0; i<6;i++) {
-      if(i<3) {  // For the barrel
+    for (int i=0; i<NumberOfTotLayers;i++) {
+      if(i<NumberOfBarrelLayers) {  // For the barrel
 	// Assume 1% inefficiency for single pixels, 
 	// this is given by faulty bump-bonding and seus.  
 	thePixelEfficiency[i]     = 1.-0.001;  // pixels = 99.9%
@@ -157,8 +167,8 @@ SiPixelDigitizerAlgorithm::SiPixelDigitizerAlgorithm(const edm::ParameterSet& co
   } else if (thePixelLuminosity>0) { // Include effciency
     pixelInefficiency=true;
     // Default efficiencies 
-    for (int i=0; i<6;i++) {
-      if(i<3) { // For the barrel
+    for (int i=0; i<NumberOfTotLayers;i++) {
+      if(i<NumberOfBarrelLayers) { // For the barrel
 	// Assume 1% inefficiency for single pixels, 
 	// this is given by faulty bump-bonding and seus.  
 	thePixelEfficiency[i]     = 1.-0.01;  // pixels = 99%
@@ -310,7 +320,8 @@ SiPixelDigitizerAlgorithm::SiPixelDigitizerAlgorithm(const edm::ParameterSet& co
 			       << thePixelThresholdInE<<" "<<theElectronPerADC 
 			       << " " << theAdcFullScale 
 			       << " The delta cut-off is set to " << tMax
-			      << " pix-inefficiency "<<thePixelLuminosity;
+			      << " pix-inefficiency "<<thePixelLuminosity
+			      << " Number of Barrel Pixel layers: "<<NumberOfBarrelLayers;
 
 
 }

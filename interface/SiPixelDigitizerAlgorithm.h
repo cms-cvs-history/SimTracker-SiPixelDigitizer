@@ -190,6 +190,10 @@ class SiPixelDigitizerAlgorithm  {
     // Variables 
     edm::ParameterSet conf_;
     //external parameters 
+    int NumberOfBarrelLayers;   // Default = 3 now 8
+    int NumberOfEndcapDisks;     // Default = 3
+    int NumberOfTotLayers;     // NumberOfBarrelLayers+NumberOfEndcapDisks
+
     //-- primary ionization
     int    NumberOfSegments; // =20 does not work ;
     // go from Geant energy GeV to number of electrons
@@ -246,9 +250,9 @@ class SiPixelDigitizerAlgorithm  {
     float PixelEfficiency;
     float PixelColEfficiency;
     float PixelChipEfficiency;
-    float thePixelEfficiency[6];     // Single pixel effciency
-    float thePixelColEfficiency[6];  // Column effciency
-    float thePixelChipEfficiency[6]; // ROC efficiency
+    float thePixelEfficiency[30];     // Single pixel effciency
+    float thePixelColEfficiency[30];  // Column effciency
+    float thePixelChipEfficiency[30]; // ROC efficiency
     
     //-- calibration smearing
     bool doMissCalibrate;         // Switch on the calibration smearing
