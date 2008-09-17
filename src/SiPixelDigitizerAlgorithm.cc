@@ -1,3 +1,4 @@
+
 //class SiPixelDigitizerAlgorithm SimTracker/SiPixelDigitizer/src/SiPixelDigitizerAlgoithm.cc
 
 // Original Author Danek Kotlinski
@@ -356,49 +357,42 @@ SiPixelDigitizerAlgorithm::run(
   detID= _detp->geographicalId().rawId();
 
   _signal.clear();
-
-  // initalization  of pixeldigisimlinks
+   // initalization  of pixeldigisimlinks
   link_coll.clear();
-
-  //Digitization of the SimHits of a given pixdet
+   //Digitization of the SimHits of a given pixdet
   vector<PixelDigi> collector =digitize(pixdet);
-
-  // edm::DetSet<PixelDigi> collector;
-
-#ifdef TP_DEBUG
-  LogDebug ("PixelDigitizer") << "[SiPixelDigitizerAlgorithm] converted " << collector.size() << " PixelDigis in DetUnit" << detID; 
-#endif
-
+   // edm::DetSet<PixelDigi> collector;
+ 
+ 
   return collector;
 }
 //============================================================================
 vector<PixelDigi> SiPixelDigitizerAlgorithm::digitize(PixelGeomDetUnit *det){
- 
+  // std::cout<<"1 "<<_PixelHits.size()<<std::endl; 
   if( _PixelHits.size() > 0 || addNoisyPixels) {
- 
+    // std::cout<<"2"<<std::endl;
     topol=&det->specificTopology(); // cache topology
     numColumns = topol->ncolumns();  // det module number of cols&rows
     numRows = topol->nrows();
+    numROCX = topol->rocsX();
+    numROCY = topol->rocsY();
 
-
-    // full detector thicness
+     // full detector thicness
     moduleThickness = det->specificSurface().bounds().thickness(); 
-
-    // The index converter is only needed when inefficiencies or misscalibration
+     // The index converter is only needed when inefficiencies or misscalibration
     // are simulated.
     if((pixelInefficiency>0) || doMissCalibrate ) {  // Init pixel indices
-      pIndexConverter = new PixelIndices(numColumns,numRows);
+      //pIndexConverter = new PixelIndices(numColumns,numRows);
+      pIndexConverter = new PixelIndices(numColumns,numRows, numROCX, numROCY);
     }
-
-    // Noise laready defined in electrons
+     // Noise laready defined in electrons
     //thePixelThresholdInE = thePixelThreshold * theNoiseInElectrons; 
     // Find the threshold in noise units, needed for the noiser.
     if(theNoiseInElectrons>0.) 
       thePixelThreshold = thePixelThresholdInE/theNoiseInElectrons; 
     else 
       thePixelThreshold = 0.;
-
-#ifdef TP_DEBUG
+ #ifdef TP_DEBUG
     LogDebug ("PixelDigitizer") 
       << " PixelDigitizer "  
       << numColumns << " " << numRows << " " << moduleThickness;
@@ -406,8 +400,7 @@ vector<PixelDigi> SiPixelDigitizerAlgorithm::digitize(PixelGeomDetUnit *det){
 
     // produce SignalPoint's for all SimHit's in detector
     // Loop over hits
- 
-    vector<PSimHit>::const_iterator ssbegin; 
+     vector<PSimHit>::const_iterator ssbegin; 
     for (ssbegin= _PixelHits.begin();ssbegin !=_PixelHits.end(); ++ssbegin) {
       
 #ifdef TP_DEBUG
@@ -418,29 +411,28 @@ vector<PixelDigi> SiPixelDigitizerAlgorithm::digitize(PixelGeomDetUnit *det){
 	<< (*ssbegin).detUnitId()  
 	<< (*ssbegin).entryPoint() << " " << (*ssbegin).exitPoint() ; 
 #endif      
-      
+      // std::cout<<"8"<<std::endl;
       _collection_points.clear();  // Clear the container
       // fill _collection_points for this SimHit, indpendent of topology
       // Check the TOF cut
       //if (std::abs( (*ssbegin).tof() )<theTofCut){ // old cut
       if ( ((*ssbegin).tof() >= theTofLowerCut) && ((*ssbegin).tof() <= theTofUpperCut) ) {
 	primary_ionization(*ssbegin); // fills _ionization_points	
+	//std::cout<<"9"<<std::endl;
 	drift(*ssbegin);  // transforms _ionization_points to _collection_points  	
 	// compute induced signal on readout elements and add to _signal
+	//std::cout<<"10"<<std::endl;
 	induce_signal(*ssbegin); // *ihit needed only for SimHit<-->Digi link
+	//std::cout<<"E"<<std::endl;
       } //  end if 
     } // end for 
-
     if(addNoise) add_noise();  // generate noise
     // Do only if needed 
-
     if((pixelInefficiency>0) && (_signal.size()>0)) 
       pixel_inefficiency(); // Kill some pixels
-
     delete pIndexConverter;
   }
-
-  make_digis();
+  make_digis(); 
   return internal_coll;
 }
 
