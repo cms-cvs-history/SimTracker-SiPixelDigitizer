@@ -425,6 +425,8 @@ vector<PixelDigi> SiPixelDigitizerAlgorithm::digitize(PixelGeomDetUnit *det){
     topol=&det->specificTopology(); // cache topology
     numColumns = topol->ncolumns();  // det module number of cols&rows
     numRows = topol->nrows();
+    numROCX = topol->rocsX();
+    numROCY = topol->rocsY();
 
 
     // full detector thicness
@@ -433,7 +435,7 @@ vector<PixelDigi> SiPixelDigitizerAlgorithm::digitize(PixelGeomDetUnit *det){
     // The index converter is only needed when inefficiencies or misscalibration
     // are simulated.
     if((pixelInefficiency>0) || doMissCalibrate ) {  // Init pixel indices
-      pIndexConverter = new PixelIndices(numColumns,numRows);
+      pIndexConverter = new PixelIndices(numColumns,numRows, numROCX, numROCY);
     }
 
     // Noise laready defined in electrons
