@@ -32,12 +32,11 @@
 // pixel gain payload access (offline version)
 #include "CondTools/SiPixel/interface/SiPixelGainCalibrationOfflineService.h"
 
-//Begin: Accessing Lorentz Angle from the DB:
+// Accessing Pixel Lorentz Angle from the DB:
 #include "CondFormats/SiPixelObjects/interface/SiPixelLorentzAngle.h"
 #include "CondFormats/DataRecord/interface/SiPixelLorentzAngleRcd.h"
 
-
-//Begin: Accessing the Dead pixel modules from the DB:
+// Accessing Pixel dead modules from the DB:
 //#include "CondFormats/SiPixelObjects/interface/SiPixelQuality.h"
 //#include "CondFormats/DataRecord/interface/SiPixelQualityRcd.h"
 
@@ -219,6 +218,10 @@ class SiPixelDigitizerAlgorithm  {
     // Variables 
     edm::ParameterSet conf_;
     //external parameters 
+    int NumberOfBarrelLayers;   // Default = 3 now 8
+    int NumberOfEndcapDisks;     // Default = 3
+    int NumberOfTotLayers;     // NumberOfBarrelLayers+NumberOfEndcapDisks
+
     //-- primary ionization
     int    NumberOfSegments; // =20 does not work ;
     // go from Geant energy GeV to number of electrons
@@ -240,7 +243,18 @@ class SiPixelDigitizerAlgorithm  {
     float theReadoutNoise;       // Noise of the readount chain in elec,
                                  //inludes DCOL-Amp,TBM-Amp, Alt, AOH,OptRec.
     float thePixelThreshold;     // Pixel threshold in units of noise.
+
     float thePixelThresholdInE;  // Pixel noise in electrons.
+
+    float theThresholdInE_FPix;  // Pixel threshold in electrons FPix.
+    float theThresholdInE_BPix;  // Pixel threshold in electrons BPix.
+
+    double theThresholdSmearing_FPix;
+    double theThresholdSmearing_BPix;
+
+    double electronsPerVCAL;          // for electrons - VCAL conversion
+    double electronsPerVCAL_Offset;   // in misscalibrate()
+
     float theTofLowerCut;             // Cut on the particle TOF
     float theTofUpperCut;             // Cut on the particle TOF
     float tanLorentzAnglePerTesla_FPix;   //FPix Lorentz angle tangent per Tesla
@@ -256,6 +270,8 @@ class SiPixelDigitizerAlgorithm  {
     //-- pixel efficiency
     bool pixelInefficiency;      // Switch on pixel ineffciency
     int  thePixelLuminosity;        // luminosity for inefficiency, 0,1,10
+
+    bool addThresholdSmearing;
         
     int theColsInChip;           // num of columns per ROC (for pix ineff.)
     int theRowsInChip;           // num of rows per ROC
@@ -268,7 +284,7 @@ class SiPixelDigitizerAlgorithm  {
     //  int digis; 
     const PixelGeomDetUnit* _detp;
     uint32_t detID;     // Det id
-
+    
 
     std::vector<PSimHit> _PixelHits; //cache
     const PixelTopology* topol;
@@ -284,9 +300,9 @@ class SiPixelDigitizerAlgorithm  {
     float PixelEfficiency;
     float PixelColEfficiency;
     float PixelChipEfficiency;
-    float thePixelEfficiency[6];     // Single pixel effciency
-    float thePixelColEfficiency[6];  // Column effciency
-    float thePixelChipEfficiency[6]; // ROC efficiency
+    float thePixelEfficiency[30];     // Single pixel effciency
+    float thePixelColEfficiency[30];  // Column effciency
+    float thePixelChipEfficiency[30]; // ROC efficiency
     
     //-- calibration smearing
     bool doMissCalibrate;         // Switch on the calibration smearing
@@ -304,6 +320,10 @@ class SiPixelDigitizerAlgorithm  {
     // The eloss fluctuation class from G4. Is the right place? 
     SiG4UniversalFluctuation * fluctuate;   // make a pointer 
     GaussianTailNoiseGenerator * theNoiser; //
+
+
+
+
     PixelIndices * pIndexConverter;         // Pointer to the index converter 
    
     std::vector<EnergyDepositUnit> _ionization_points;
@@ -332,7 +352,7 @@ class SiPixelDigitizerAlgorithm  {
 
     bool use_module_killing_; // remove or not the dead pixel modules
     bool use_deadmodule_DB_; // if we want to get dead pixel modules from the DataBase.
-    bool use_LorentzAngle_DB_; // if we want to get LA from the DataBase.
+    bool use_LorentzAngle_DB_; // if we want to get Lorentz angle from the DataBase.
 
     void pixel_inefficiency_db(); 
        // access to the gain calibration payloads in the db. Only gets initialized if check_dead_pixels_ is set to true.
@@ -340,12 +360,20 @@ class SiPixelDigitizerAlgorithm  {
     float missCalibrate(int col, int row, float amp) const;  
     LocalVector DriftDirection();
 
-    void module_killing_conf();
-    void module_killing_DB(); 
+    void module_killing_conf(); // remove dead modules using the list in the configuration file PixelDigi_cfi.py
+    void module_killing_DB();  // remove dead modules uisng the list in the DB
 
    // For random numbers
     CLHEP::RandFlat *flatDistribution_;
     CLHEP::RandGaussQ *gaussDistribution_;
+
+    // Threshold gaussian smearing:
+    CLHEP::RandGaussQ *smearedThreshold_FPix_;
+    CLHEP::RandGaussQ *smearedThreshold_BPix_;
+
+
+  // the random generator
+  CLHEP::RandGaussQ* theGaussianDistribution;
     
 };
 
