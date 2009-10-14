@@ -145,8 +145,11 @@ SiPixelDigitizerAlgorithm::SiPixelDigitizerAlgorithm(const edm::ParameterSet& co
   theElectronPerADC=conf_.getParameter<double>("ElectronPerAdc");
 
   // ADC saturation value, 255=8bit adc.
+  // theFirstStackLayer is the first BPix layer that gets the theAdcFullScaleStack ADC count
   //theAdcFullScale=conf_.getUntrackedParameter<int>("AdcFullScale",255);
   theAdcFullScale=conf_.getParameter<int>("AdcFullScale");
+  theAdcFullScaleStack=conf_.getParameter<int>("AdcFullScaleStack");
+  theFirstStackLayer=conf_.getParameter<int>("FirstStackLayer");
 
   // Pixel threshold in units of noise:
   // thePixelThreshold=conf_.getParameter<double>("ThresholdInNoiseUnits");
@@ -393,6 +396,7 @@ SiPixelDigitizerAlgorithm::SiPixelDigitizerAlgorithm(const edm::ParameterSet& co
 			      << "threshold in electron BPix = " 
 			      << theThresholdInE_BPix 
 			      <<" " << theElectronPerADC << " " << theAdcFullScale 
+			      <<" or "<< theAdcFullScaleStack
 			      << " The delta cut-off is set to " << tMax
 			      << " pix-inefficiency "<<thePixelLuminosity
                               << " Number of Barrel Pixel layers: "<<NumberOfBarrelLayers;
@@ -1083,8 +1087,18 @@ void SiPixelDigitizerAlgorithm::make_digis() {
       } else { // Just do a simple electron->adc conversion
 	adc = int( signalInElectrons / theElectronPerADC ); // calibrate gain
       }
+      unsigned int Subid=DetId(detID).subdetId();
+      int layerIndex=0;
+      if (Subid==  PixelSubdetector::PixelBarrel){layerIndex=PXBDetId(detID).layer();}
       adc = min(adc, theAdcFullScale); // Check maximum value
-      
+
+      if (layerIndex>=theFirstStackLayer) {
+        	// Set to 1 if over the threshold 
+	if (theAdcFullScaleStack==1) {adc=1;}
+		// Make it a linear fit to the full scale of the normal adc count.   Start new adc from 1 not zero.
+	if (theAdcFullScaleStack!=1&&theAdcFullScaleStack!=theAdcFullScale) {adc = int (1 + adc * (theAdcFullScaleStack-1)/float(theAdcFullScale) );}
+        }
+      //std::cout<<"\nSiPixelDigitizer with Layer "<<layerIndex<<" ADC= "<<adc;
 #ifdef TP_DEBUG
       LogDebug ("Pixel Digitizer") 
 	<< (*i).first << " " << (*i).second << " " << signalInElectrons 
@@ -1093,7 +1107,7 @@ void SiPixelDigitizerAlgorithm::make_digis() {
            
       // Load digis
       internal_coll.push_back( PixelDigi( ip.first, ip.second, adc));
-  
+      
       //digilink     
       if((*i).second.hits().size()>0){
 	simi.clear();
