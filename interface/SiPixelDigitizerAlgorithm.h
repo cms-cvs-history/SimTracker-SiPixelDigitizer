@@ -296,9 +296,10 @@ class SiPixelDigitizerAlgorithm  {
     std::vector<PixelDigiSimLink> link_coll;
     GlobalVector _bfield;
     
-    float PixelEff;
-    float PixelColEff;
-    float PixelChipEff;
+    double PixelEff;                  //--Hec: [Input Eff] (the variables were float I changed to double) Aug 09
+    double PixelColEff;               //--Hec: [Input Col Eff]
+    double PixelChipEff;              //--Hec: [Input Chip Eff]
+
     float PixelEfficiency;
     float PixelColEfficiency;
     float PixelChipEfficiency;

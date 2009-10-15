@@ -37,7 +37,10 @@ simSiPixelDigis = cms.EDFilter("SiPixelDigitizer",
     killModules = cms.bool(True),
     DeadModules = cms.VPSet(),
     NumPixelBarrel = cms.int32(9),
-    NumPixelEndcap = cms.int32(2)
+    NumPixelEndcap = cms.int32(2),
+    PixelEff     = cms.double(1.0),
+    PixelColEff  = cms.double(1.0),
+    PixelChipEff = cms.double(1.0)
 )
 
 

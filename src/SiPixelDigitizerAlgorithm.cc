@@ -192,6 +192,13 @@ SiPixelDigitizerAlgorithm::SiPixelDigitizerAlgorithm(const edm::ParameterSet& co
  
   // Control the pixel inefficiency
   thePixelLuminosity=conf_.getParameter<int>("AddPixelInefficiency");
+                                                               //--Hec: ADD HERE INNEFICIENCY INPUT PARARAMETERS [Sep-09]
+  PixelEff     = conf_.getParameter<double>("PixelEff");       //--Hec: Pixel
+  PixelColEff  = conf_.getParameter<double>("PixelColEff");    //--Hec: Column
+  PixelChipEff = conf_.getParameter<double>("PixelChipEff");   //--Hec: Chip
+
+  cout<<"My Eff Input: thePixelLuminosity= "<<thePixelLuminosity
+  <<" PixelEff="<<PixelEff<<" PixelColEff="<<PixelColEff<<" PixelChipEff="<<PixelChipEff<<endl;   //--Hec:
 
   // Get the constants for the miss-calibration studies
   doMissCalibrate=conf_.getParameter<bool>("MissCalibrate"); // Enable miss-calibration
@@ -209,6 +216,10 @@ SiPixelDigitizerAlgorithm::SiPixelDigitizerAlgorithm(const edm::ParameterSet& co
       thePixelEfficiency[i]     = 1.;  // pixels = 100%
       thePixelColEfficiency[i]  = 1.;  // columns = 100%
       thePixelChipEfficiency[i] = 1.; // chips = 100%
+      cout << "Calling No ineEfficiency: NumberOfTotLayers "<<i
+           <<" Pixels: " <<thePixelEfficiency[i]
+           <<" Columns: "<<thePixelColEfficiency[i]
+           <<" Chips: "  <<thePixelChipEfficiency[i]<<endl;            //--Hec:
     }
     
     // include only the static (non rate depedent) efficiency 
@@ -220,50 +231,60 @@ SiPixelDigitizerAlgorithm::SiPixelDigitizerAlgorithm(const edm::ParameterSet& co
       if(i<NumberOfBarrelLayers) {  // For the barrel
 	// Assume 1% inefficiency for single pixels, 
 	// this is given by faulty bump-bonding and seus.  
-	thePixelEfficiency[i]     = 1.-0.001;  // pixels = 99.9%
+	thePixelEfficiency[i]     = PixelEff;           //--Hec: 1.-0.001;  // pixels = 99.9%
 	// For columns make 0.1% default.
-	thePixelColEfficiency[i]  = 1.-0.001;  // columns = 99.9%
+	thePixelColEfficiency[i]  = PixelColEff;        //--Hec: 1.-0.001;  // columns = 99.9%
 	// A flat 0.1% inefficiency due to lost rocs
-	thePixelChipEfficiency[i] = 1.-0.001; // chips = 99.9%
+	thePixelChipEfficiency[i] = PixelChipEff;       //--Hec: 1.-0.001; // chips = 99.9%
+        cout << "Calling Barrel Eff. NumberOfBarrelLayers: "<<i
+             <<" Pixels: " <<thePixelEfficiency[i]
+             <<" Columns: "<<thePixelColEfficiency[i]
+             <<" Chips: "  <<thePixelChipEfficiency[i]<<endl;            //--Hec:
       } else { // For the endcaps
 	// Assume 1% inefficiency for single pixels, 
 	// this is given by faulty bump-bonding and seus.  
-	thePixelEfficiency[i]     = 1.-0.001;  // pixels = 99.9%
+	thePixelEfficiency[i]     = PixelEff;           //--Hec:  1.-0.001;  // pixels = 99.9%
 	// For columns make 0.1% default.
-	thePixelColEfficiency[i]  = 1.-0.001;  // columns = 99.9%
+	thePixelColEfficiency[i]  = PixelColEff;        //--Hec:  1.-0.001;  // columns = 99.9%
 	// A flat 0.1% inefficiency due to lost rocs
-	thePixelChipEfficiency[i] = 1.-0.001; // chips = 99.9%
+	thePixelChipEfficiency[i] = PixelChipEff;       //--Hec:  1.-0.001; // chips = 99.9%
+        cout << "Calling EndCap Eff. "<<NumberOfBarrelLayers<<" "<<i
+             <<" Pixels: " <<thePixelEfficiency[i]
+             <<" Columns: "<<thePixelColEfficiency[i]
+             <<" Chips: "  <<thePixelChipEfficiency[i]<<endl;            //--Hec:
       }
     }
     
     // Include also luminosity rate dependent inefficieny
   } else if (thePixelLuminosity>0) { // Include effciency
+    cout << "Luminosity ineEfficiency [Need to be check]"<<endl;            //--Hec:
     pixelInefficiency=true;
     // Default efficiencies 
     for (int i=0; i<NumberOfTotLayers;i++) {
       if(i<NumberOfBarrelLayers) { // For the barrel
 	// Assume 1% inefficiency for single pixels, 
 	// this is given by faulty bump-bonding and seus.  
-	thePixelEfficiency[i]     = 1.-0.01;  // pixels = 99%
+	thePixelEfficiency[i]     = PixelEff;             //--Hec: 1.-0.01;  // pixels = 99%
 	// For columns make 1% default.
-	thePixelColEfficiency[i]  = 1.-0.01;  // columns = 99%
+	thePixelColEfficiency[i]  = PixelColEff;          //--Hec: 1.-0.01;  // columns = 99%
 	// A flat 0.25% inefficiency due to lost data packets from TBM
-	thePixelChipEfficiency[i] = 1.-0.0025; // chips = 99.75%
+	thePixelChipEfficiency[i] = PixelChipEff;         //--Hec: 1.-0.0025; // chips = 99.75%
       } else { // For the endcaps
 	// Assume 1% inefficiency for single pixels, 
 	// this is given by faulty bump-bonding and seus.  
-	thePixelEfficiency[i]     = 1.-0.01;  // pixels = 99%
+	thePixelEfficiency[i]     = PixelEff;             //--Hec: 1.-0.01;  // pixels = 99%
 	// For columns make 1% default.
-	thePixelColEfficiency[i]  = 1.-0.01;  // columns = 99%
+	thePixelColEfficiency[i]  = PixelColEff;          //--Hec: 1.-0.01;  // columns = 99%
 	// A flat 0.25% inefficiency due to lost data packets from TBM
-	thePixelChipEfficiency[i] = 1.-0.0025; // chips = 99.75%
+	thePixelChipEfficiency[i] = PixelChipEff;         //--Hec: 1.-0.0025; // chips = 99.75%
       }
     }
    
     // Special cases ( High-lumi for 4cm layer) where the readout losses are higher
     if(thePixelLuminosity==10) { // For high luminosity, bar layer 1
-      thePixelColEfficiency[0] = 1.-0.034; // 3.4% for r=4 only
-      thePixelEfficiency[0]    = 1.-0.015; // 1.5% for r=4
+      thePixelEfficiency[0]     = PixelEff;          //--Hec: 1.-0.015; // 1.5% for r=4
+      thePixelColEfficiency[0]  = PixelColEff;       //--Hec: 1.-0.034; // 3.4% for r=4 only
+      thePixelChipEfficiency[0] = PixelChipEff;      //--Hec: I added this variable here
     }
     
   } // end the pixel inefficiency part
@@ -1228,10 +1249,15 @@ void SiPixelDigitizerAlgorithm::pixel_inefficiency() {
     pixelEfficiency  = thePixelEfficiency[layerIndex-1];
     columnEfficiency = thePixelColEfficiency[layerIndex-1];
     chipEfficiency   = thePixelChipEfficiency[layerIndex-1];
+
+    // already initialized in calling routine (digitize) and deleted there after this call
+    //pIndexConverter = new PixelIndices(numColumns,numRows, numROCX, numROCY);  //--Hec: [Sep-09] Initialize variables
+    int ax = pIndexConverter->GetdefaultDetSizeInX();  //--Hec:
+    int ay = pIndexConverter->GetdefaultDetSizeInY();  //--Hec:
  
     // This should never happen
-    if(numColumns>416)  LogWarning ("Pixel Geometry") <<" wrong columns in barrel "<<numColumns;
-    if(numRows>160)  LogWarning ("Pixel Geometry") <<" wrong rows in barrel "<<numRows;
+    if(numColumns>ay)  LogWarning ("Pixel Geometry") <<" wrong columns in barrel "<<numColumns;   //--Hec:
+    if(numRows   >ax)  LogWarning ("Pixel Geometry") <<" wrong rows in barrel "    <<numRows;     //--Hec:
     
   } else {                // forward disks
    
