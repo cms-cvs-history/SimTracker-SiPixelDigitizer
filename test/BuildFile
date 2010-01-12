@@ -17,7 +17,7 @@
 <use name=FWCore/ParameterSet>
 
 # to use root histos inside the analyzer
-<use name=PhysicsTools/UtilAlgos>
+<use name=CommonTools/UtilAlgos>
 
 <library file="PixelDigisTest.cc" name="PixelDigisTest">
 <flags EDM_PLUGIN=1>
