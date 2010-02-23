@@ -31,14 +31,15 @@
 
 // pixel gain payload access (offline version for Simulation)
 #include "CalibTracker/SiPixelESProducers/interface/SiPixelGainCalibrationOfflineSimService.h"
+//#include "CondTools/SiPixel/interface/SiPixelGainCalibrationOfflineService.h"
 
 // Accessing Pixel Lorentz Angle from the DB:
 #include "CondFormats/SiPixelObjects/interface/SiPixelLorentzAngle.h"
 #include "CondFormats/DataRecord/interface/SiPixelLorentzAngleSimRcd.h"
 
 // Accessing Pixel dead modules from the DB:
-#include "CondFormats/SiPixelObjects/interface/SiPixelQuality.h"
-#include "CondFormats/DataRecord/interface/SiPixelQualityRcd.h"
+//#include "CondFormats/SiPixelObjects/interface/SiPixelQuality.h"
+//#include "CondFormats/DataRecord/interface/SiPixelQualityRcd.h"
 
 
 // For the random numbers
@@ -70,7 +71,7 @@ class SiPixelDigitizerAlgorithm  {
   edm::ESHandle<SiPixelLorentzAngle> SiPixelLorentzAngle_;
 
   //Accessing Dead pixel modules from DB:
-  edm::ESHandle<SiPixelQuality> SiPixelBadModule_;
+  //  edm::ESHandle<SiPixelQuality> SiPixelBadModule_;
 
 
 
@@ -218,6 +219,10 @@ class SiPixelDigitizerAlgorithm  {
     // Variables 
     edm::ParameterSet conf_;
     //external parameters 
+    int NumberOfBarrelLayers;   // Default = 3 now 8
+    int NumberOfEndcapDisks;     // Default = 3
+    int NumberOfTotLayers;     // NumberOfBarrelLayers+NumberOfEndcapDisks
+
     //-- primary ionization
     int    NumberOfSegments; // =20 does not work ;
     // go from Geant energy GeV to number of electrons
@@ -235,11 +240,13 @@ class SiPixelDigitizerAlgorithm  {
     //-- make_digis 
     float theElectronPerADC;     // Gain, number of electrons per adc count.
     int theAdcFullScale;         // Saturation count, 255=8bit.
+    int theAdcFullScaleStack;	 // Saturation count for stack layers, 1=1bit.
+    int theFirstStackLayer;	 // The first BPix layer to use theAdcFullScaleStack.
     float theNoiseInElectrons;   // Noise (RMS) in units of electrons.
     float theReadoutNoise;       // Noise of the readount chain in elec,
                                  //inludes DCOL-Amp,TBM-Amp, Alt, AOH,OptRec.
 
-    float theSmearedChargeRMS;
+    //    float theSmearedChargeRMS;
 
     float thePixelThreshold;     // Pixel threshold in units of noise.
 
@@ -278,6 +285,8 @@ class SiPixelDigitizerAlgorithm  {
     
     int numColumns; // number of pixel columns in a module (detUnit)
     int numRows;    // number          rows
+    int numROCX;
+    int numROCY;
     float moduleThickness; // sensor thickness 
     //  int digis; 
     const PixelGeomDetUnit* _detp;
@@ -291,16 +300,17 @@ class SiPixelDigitizerAlgorithm  {
 
     std::vector<PixelDigiSimLink> link_coll;
     GlobalVector _bfield;
+
+    double PixelEff;                  //--Hec: [Input Eff] (the variables were float I changed to double) Aug 09
+    double PixelColEff;               //--Hec: [Input Col Eff]
+    double PixelChipEff;              //--Hec: [Input Chip Eff]
     
-    float PixelEff;
-    float PixelColEff;
-    float PixelChipEff;
     float PixelEfficiency;
     float PixelColEfficiency;
     float PixelChipEfficiency;
-    float thePixelEfficiency[6];     // Single pixel effciency
-    float thePixelColEfficiency[6];  // Column effciency
-    float thePixelChipEfficiency[6]; // ROC efficiency
+    float thePixelEfficiency[30];     // Single pixel effciency
+    float thePixelColEfficiency[30];  // Column effciency
+    float thePixelChipEfficiency[30]; // ROC efficiency
     
     //-- calibration smearing
     bool doMissCalibrate;         // Switch on the calibration smearing
@@ -369,7 +379,7 @@ class SiPixelDigitizerAlgorithm  {
     CLHEP::RandGaussQ *smearedThreshold_FPix_;
     CLHEP::RandGaussQ *smearedThreshold_BPix_;
 
-    CLHEP::RandGaussQ *smearedChargeDistribution_ ;
+    CLHEP::RandGaussQ *gaussDistributionVCALNoise_ ;
 
   // the random generator
   CLHEP::RandGaussQ* theGaussianDistribution;
