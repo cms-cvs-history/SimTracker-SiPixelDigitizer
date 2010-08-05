@@ -254,9 +254,18 @@ class SiPixelDigitizerAlgorithm  {
 
     float theThresholdInE_FPix;  // Pixel threshold in electrons FPix.
     float theThresholdInE_BPix;  // Pixel threshold in electrons BPix.
+    //Carlotta
+    float theThresholdInE_BPix_L1;
 
     double theThresholdSmearing_FPix;
     double theThresholdSmearing_BPix;
+    //Carlotta: inly if you also want different smearing il L1
+    //double theThresholdSmearing_BPix_L1;
+
+
+
+
+
 
     double electronsPerVCAL;          // for electrons - VCAL conversion
     double electronsPerVCAL_Offset;   // in misscalibrate()
@@ -378,6 +387,8 @@ class SiPixelDigitizerAlgorithm  {
     // Threshold gaussian smearing:
     CLHEP::RandGaussQ *smearedThreshold_FPix_;
     CLHEP::RandGaussQ *smearedThreshold_BPix_;
+    //Carlotta
+    CLHEP::RandGaussQ *smearedThreshold_BPix_L1_;
 
     CLHEP::RandGaussQ *gaussDistributionVCALNoise_ ;
 

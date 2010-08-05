@@ -10,9 +10,19 @@ simSiPixelDigis = cms.EDFilter("SiPixelDigitizer",
     OffsetSmearing = cms.double(0.0),
     ThresholdInElectrons_FPix = cms.double(2870.0), 
     ThresholdInElectrons_BPix = cms.double(3700.0),
+                               
+    #Carlotta +++++++++++++++++++++++++++++++++++++++++++++++++++
+    ThresholdInElectrons_BPix_L1 = cms.double(3700.0),
+    #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+                               
     AddThresholdSmearing = cms.bool(True),
     ThresholdSmearing_FPix = cms.double(200.0),
     ThresholdSmearing_BPix = cms.double(410.0),
+
+    #Carlotta +++++++++++++++++++++++++++++++++++++++++++++++++++
+   # ThresholdSmearing_BPix_L1 = cms.double(410.0),
+    #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+                               
     NoiseInElectrons = cms.double(175.0),
     MissCalibrate = cms.bool(True),
     ElectronsPerVcal = cms.double(65.5),

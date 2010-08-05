@@ -158,6 +158,10 @@ SiPixelDigitizerAlgorithm::SiPixelDigitizerAlgorithm(const edm::ParameterSet& co
   theThresholdInE_FPix=conf_.getParameter<double>("ThresholdInElectrons_FPix");
   theThresholdInE_BPix=conf_.getParameter<double>("ThresholdInElectrons_BPix");
 
+  //Carlotta" enables different threshold in layer 1 when we have smaller pixel pitch
+  theThresholdInE_BPix_L1=conf_.getParameter<double>("ThresholdInElectrons_BPix_L1");
+
+
   // Add threshold gaussian smearing:
   addThresholdSmearing = conf_.getParameter<bool>("AddThresholdSmearing");
   theThresholdSmearing_FPix = conf_.getParameter<double>("ThresholdSmearing_FPix");
@@ -328,8 +332,13 @@ SiPixelDigitizerAlgorithm::SiPixelDigitizerAlgorithm(const edm::ParameterSet& co
     if(addThresholdSmearing) {
       smearedThreshold_FPix_ = new CLHEP::RandGaussQ(engine, theThresholdInE_FPix , theThresholdSmearing_FPix);
       smearedThreshold_BPix_ = new CLHEP::RandGaussQ(engine, theThresholdInE_BPix , theThresholdSmearing_BPix);
-    }
 
+      //Carlotta
+      smearedThreshold_BPix_L1_ = new CLHEP::RandGaussQ(engine, theThresholdInE_BPix_L1 , theThresholdSmearing_BPix);
+      // std::cout <<  "digitizer constructor " << theThresholdInE_BPix_L1 << std::endl;
+
+    }
+   
     } //end Init the random number services
 
   // Prepare for the analog amplitude miss-calibration
@@ -447,6 +456,10 @@ SiPixelDigitizerAlgorithm::~SiPixelDigitizerAlgorithm() {
   if(addThresholdSmearing) {
     delete smearedThreshold_FPix_;
     delete smearedThreshold_BPix_;
+
+    //Carlotta
+    delete smearedThreshold_BPix_L1_;
+
   }
 
   if(addNoise) delete theNoiser;
@@ -512,20 +525,30 @@ vector<PixelDigi> SiPixelDigitizerAlgorithm::digitize(PixelGeomDetUnit *det){
     //thePixelThresholdInE = thePixelThreshold * theNoiseInElectrons ; 
     // Find the threshold in noise units, needed for the noiser.
 
+
   unsigned int Sub_detid=DetId(detID).subdetId();
     
+  //Carlotta
+  int lay = 0;
+  lay = PXBDetId(detID).layer();
+
+
   if(theNoiseInElectrons>0.){
     if(Sub_detid == PixelSubdetector::PixelBarrel){ // Barrel modules
+     
       if(addThresholdSmearing) { 
-	thePixelThresholdInE = smearedThreshold_BPix_->fire(); // gaussian smearing 
+	if (lay == 1)  { thePixelThresholdInE = smearedThreshold_BPix_L1_->fire(); } // gaussian smearing 	      
+	else { thePixelThresholdInE = smearedThreshold_BPix_->fire(); } // gaussian smearing
       } else {
-	thePixelThresholdInE = theThresholdInE_BPix; // no smearing
+	if (lay == 1) { thePixelThresholdInE = theThresholdInE_BPix_L1; } //no smearing
+	else { thePixelThresholdInE = theThresholdInE_BPix; } // no smearing
       }
-      
+    
+      //  std::cout << " addThresholdSmearing " << addThresholdSmearing << " || layer " << lay << " threshold after smearing " <<  thePixelThresholdInE << std::endl;
       thePixelThreshold = thePixelThresholdInE/theNoiseInElectrons; 
       
-      //      std::cout << "digitize(): theNoiseInElectrons>0 and BPix: threshold in electrons is: " << thePixelThresholdInE << std::endl;
-      
+      //std::cout << "digitize(): theNoiseInElectrons>0 and BPix: threshold in electrons is: " << thePixelThresholdInE << std::endl;
+    
     } else { // Forward disks modules 
       if(addThresholdSmearing) {
 	thePixelThresholdInE = smearedThreshold_FPix_->fire(); // gaussian smearing
@@ -1098,12 +1121,13 @@ void SiPixelDigitizerAlgorithm::make_digis() {
 
     // Do only for pixels above threshold
 
-    //    std::cout << "make_digis(): signalInElectrons is " << signalInElectrons << std::endl;
+    //std::cout << "make_digis(): signalInElectrons is " << signalInElectrons << " and THRESHOLD " << thePixelThresholdInE << std::endl;
 
     if ( signalInElectrons >= thePixelThresholdInE) { // check threshold
       
-      //      unsigned int Sub_detid=DetId(detID).subdetId();
-      //      std::cout << "make_digis(): For (Sub_detid, detID) = (" << Sub_detid << ", "<< detID << ") " << "thePixelThresholdInE vaut " << thePixelThresholdInE << std::endl;
+     
+      //unsigned int Sub_detid=DetId(detID).subdetId();
+      //std::cout << "make_digis(): For (Sub_detid, detID) = (" << Sub_detid << ", "<< detID << ") " << "thePixelThresholdInE vaut " << thePixelThresholdInE << std::endl;
 
       int chan =  (*i).first;  // channel number
       pair<int,int> ip = PixelDigi::channelToPixel(chan);
@@ -1120,6 +1144,7 @@ void SiPixelDigitizerAlgorithm::make_digis() {
       unsigned int Subid=DetId(detID).subdetId();
       int layerIndex=0;
       if (Subid==  PixelSubdetector::PixelBarrel){layerIndex=PXBDetId(detID).layer();}
+
       adc = min(adc, theAdcFullScale); // Check maximum value
 
       if (layerIndex>=theFirstStackLayer) {
@@ -1128,7 +1153,13 @@ void SiPixelDigitizerAlgorithm::make_digis() {
 		// Make it a linear fit to the full scale of the normal adc count.   Start new adc from 1 not zero.
 	if (theAdcFullScaleStack!=1&&theAdcFullScaleStack!=theAdcFullScale) {adc = int (1 + adc * (theAdcFullScaleStack-1)/float(theAdcFullScale) );}
         }
+
+
+      //Carlotta
+      // std::cout << "makedigis() || layer " << layerIndex << " || " << thePixelThreshold << " || " << thePixelThresholdInE << " signal " <<  signalInElectrons << std::endl;
       //std::cout<<"\nSiPixelDigitizer with Layer "<<layerIndex<<" ADC= "<<adc;
+
+
 #ifdef TP_DEBUG
       LogDebug ("Pixel Digitizer") 
 	<< (*i).first << " " << (*i).second << " " << signalInElectrons 
