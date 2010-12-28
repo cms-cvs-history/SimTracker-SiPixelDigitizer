@@ -263,6 +263,13 @@ SiPixelDigitizerAlgorithm::SiPixelDigitizerAlgorithm(const edm::ParameterSet& co
       thePixelColEfficiency[0] = 1.-0.034; // 3.4% for r=4 only
       thePixelEfficiency[0]    = 1.-0.015; // 1.5% for r=4
     }
+    if(thePixelLuminosity==20) { // For 2e34 cm-2s-1 and 25ns bunch crossing
+      thePixelColEfficiency[0] = 1.-0.16;
+      thePixelColEfficiency[1] = 1.-0.058;
+      thePixelColEfficiency[2] = 1.-0.03;
+      thePixelColEfficiency[3] = 1.-0.03;
+      thePixelColEfficiency[4] = 1.-0.03;
+    }
     
   } // end the pixel inefficiency part
 
