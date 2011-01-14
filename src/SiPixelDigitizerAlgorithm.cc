@@ -305,6 +305,13 @@ SiPixelDigitizerAlgorithm::SiPixelDigitizerAlgorithm(const edm::ParameterSet& co
       thePixelColEfficiency[0]  = PixelColEff;       //--Hec: 1.-0.034; // 3.4% for r=4 only
       thePixelChipEfficiency[0] = PixelChipEff;      //--Hec: I added this variable here
     }
+    if(thePixelLuminosity==20) { // For <PU>=50 phase 1 geometry
+      thePixelColEfficiency[0] = 1.-0.047;
+      thePixelColEfficiency[1] = 1.-0.015;
+      thePixelColEfficiency[2] = 1.-0.006;
+      thePixelColEfficiency[3] = 1.-0.0028;
+      thePixelColEfficiency[4] = 1.-0.006;
+    }
     
   } // end the pixel inefficiency part
 
