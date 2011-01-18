@@ -1329,8 +1329,8 @@ void SiPixelDigitizerAlgorithm::pixel_inefficiency() {
     int ay = pIndexConverter->GetdefaultDetSizeInY();  //--Hec:
  
     // This should never happen
-    if(numColumns>ay)  LogWarning ("Pixel Geometry") <<" wrong columns in barrel "<<numColumns;   //--Hec:
-    if(numRows   >ax)  LogWarning ("Pixel Geometry") <<" wrong rows in barrel "    <<numRows;     //--Hec:
+    if(numColumns>ay)  LogWarning ("Pixel Geometry") <<" wrong columns in barrel "<<numColumns<<" > "<<ay;   //--Hec:
+    if(numRows   >ax)  LogWarning ("Pixel Geometry") <<" wrong rows in barrel "    <<numRows<<" > "<<ax;     //--Hec:
     
   } else {                // forward disks
    
@@ -1339,11 +1339,13 @@ void SiPixelDigitizerAlgorithm::pixel_inefficiency() {
     columnEfficiency = thePixelColEfficiency[3];
     chipEfficiency   = thePixelChipEfficiency[3];
  
+    int ax = pIndexConverter->GetdefaultDetSizeInX();  // numRow max is 160, but use num from geometry
+    int ay = pIndexConverter->GetdefaultDetSizeInY();  // numCol max is 416, but use num from geometry
     // Sometimes the forward pixels have wrong size, 
     // this crashes the index conversion, so exit.
-    if(numColumns>260 || numRows>160) {
-      if(numColumns>260)  LogWarning ("Pixel Geometry") <<" wrong columns in endcaps "<<numColumns;
-      if(numRows>160)  LogWarning ("Pixel Geometry") <<" wrong rows in endcaps "<<numRows;
+    if(numColumns> ay || numRows> ax) {
+      if(numColumns> ay)  LogWarning ("Pixel Geometry") <<" wrong columns in endcaps "<<numColumns<<" > "<<ay;
+      if(numRows> ax)  LogWarning ("Pixel Geometry") <<" wrong rows in endcaps "<<numRows<<" > "<<ax;
       return;
     }
   } // if barrel/forward
