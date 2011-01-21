@@ -1335,9 +1335,9 @@ void SiPixelDigitizerAlgorithm::pixel_inefficiency() {
   } else {                // forward disks
    
     // For endcaps take same for each endcap
-    pixelEfficiency  = thePixelEfficiency[3];
-    columnEfficiency = thePixelColEfficiency[3];
-    chipEfficiency   = thePixelChipEfficiency[3];
+    pixelEfficiency  = thePixelEfficiency[NumberOfBarrelLayers];
+    columnEfficiency = thePixelColEfficiency[NumberOfBarrelLayers];
+    chipEfficiency   = thePixelChipEfficiency[NumberOfBarrelLayers];
  
     int ax = pIndexConverter->GetdefaultDetSizeInX();  // numRow max is 160, but use num from geometry
     int ay = pIndexConverter->GetdefaultDetSizeInY();  // numCol max is 416, but use num from geometry
