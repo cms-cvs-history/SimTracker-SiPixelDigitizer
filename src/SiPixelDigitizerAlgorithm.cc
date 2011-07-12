@@ -234,6 +234,17 @@ SiPixelDigitizerAlgorithm::SiPixelDigitizerAlgorithm(const edm::ParameterSet& co
   theOffsetSmearing=conf_.getParameter<double>("OffsetSmearing"); //sigma of the offset smearing
 
   //pixel inefficiency
+  if (thePixelLuminosity==-20){
+    thePixelColEfficiency[0] = conf_.getParameter<double>("thePixelColEfficiency_BPix1");
+    thePixelColEfficiency[1] = conf_.getParameter<double>("thePixelColEfficiency_BPix2");
+    thePixelColEfficiency[2] = conf_.getParameter<double>("thePixelColEfficiency_BPix3");
+    thePixelColEfficiency[3] = conf_.getParameter<double>("thePixelColEfficiency_FPix1");
+    thePixelColEfficiency[4] = conf_.getParameter<double>("thePixelColEfficiency_FPix2"); // Not used, but leave it in in case we want use it to later
+    cout<<"\nReading in custom Pixel efficiencies "<<thePixelColEfficiency[0]<<" , "<<thePixelColEfficiency[1]<<" , "
+                  <<thePixelColEfficiency[2]<<" , "<<thePixelColEfficiency[3]<<" , "<<thePixelColEfficiency[4]<<"\n";
+    if (thePixelColEfficiency[0]<=0.5) {cout <<"\n\nDid you mean to set the Pixel efficiency at "<<thePixelColEfficiency[0]
+                                             <<", or did you mean for this to be the inefficiency?\n\n\n";}
+    }
   // the first 3 settings [0],[1],[2] are for the barrel pixels
   // the next  3 settings [3],[4],[5] are for the endcaps (undecided how)  
 
@@ -299,7 +310,14 @@ SiPixelDigitizerAlgorithm::SiPixelDigitizerAlgorithm(const edm::ParameterSet& co
       thePixelColEfficiency[0] = 1.-0.034; // 3.4% for r=4 only
       thePixelEfficiency[0]    = 1.-0.015; // 1.5% for r=4
     }
-    
+    if(thePixelLuminosity==20) { // For 2e34 cm-2s-1 and 25ns bunch crossing
+      thePixelColEfficiency[0] = 1.-0.16;
+      thePixelColEfficiency[1] = 1.-0.058;
+      thePixelColEfficiency[2] = 1.-0.03;
+      thePixelColEfficiency[3] = 1.-0.03;
+      thePixelColEfficiency[4] = 1.-0.03;
+    }
+
   } // end the pixel inefficiency part
 
   // Init the random number services  
