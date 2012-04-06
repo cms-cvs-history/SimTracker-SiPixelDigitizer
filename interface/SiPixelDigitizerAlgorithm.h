@@ -10,7 +10,7 @@
 #include "FWCore/Framework/interface/ESHandle.h"
 #include "SimDataFormats/EncodedEventId/interface/EncodedEventId.h"
 #include "SimDataFormats/TrackingHit/interface/PSimHit.h"
-#include "SimTracker/SiPixelDigitizer/interface/SimHitInfoForLinks.h"
+#include "SimTracker/Common/interface/SimHitInfoForLinks.h"
 
 // forward declarations
 
