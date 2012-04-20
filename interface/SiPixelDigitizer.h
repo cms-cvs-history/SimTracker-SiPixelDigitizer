@@ -62,6 +62,7 @@ namespace cms {
     const std::string hitsProducer;
     const vstring trackerContainers;
     const std::string geometryType;
+    const std::string instance;
     edm::ESHandle<TrackerGeometry> pDD;
     edm::ESHandle<MagneticField> pSetup;
     std::map<unsigned int, PixelGeomDetUnit*> detectorUnits;
