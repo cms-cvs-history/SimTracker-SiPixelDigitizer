@@ -14,7 +14,7 @@
 // Original Author:  Michele Pioppi-INFN perugia
 //   Modifications: Freya Blekman - Cornell University
 //         Created:  Mon Sep 26 11:08:32 CEST 2005
-// $Id: SiPixelDigitizer.cc,v 1.6.8.1 2012/03/16 17:52:58 wmtan Exp $
+// $Id: SiPixelDigitizer.cc,v 1.6.8.2 2012/04/20 23:41:49 wmtan Exp $
 //
 //
 
@@ -91,15 +91,14 @@ namespace cms
     _pixeldigialgo(),
     hitsProducer(iConfig.getParameter<std::string>("hitsProducer")),
     trackerContainers(iConfig.getParameter<std::vector<std::string> >("ROUList")),
-    geometryType(iConfig.getParameter<std::string>("GeometryType")),
-    instance("simSiPixelDigis")
+    geometryType(iConfig.getParameter<std::string>("GeometryType"))
   {
     edm::LogInfo ("PixelDigitizer ") <<"Enter the Pixel Digitizer";
     
     const std::string alias ("simSiPixelDigis"); 
     
-    mixMod.produces<edm::DetSetVector<PixelDigi> >(instance).setBranchAlias(alias);
-    mixMod.produces<edm::DetSetVector<PixelDigiSimLink> >(instance).setBranchAlias(alias + "siPixelDigiSimLink");
+    mixMod.produces<edm::DetSetVector<PixelDigi> >().setBranchAlias(alias);
+    mixMod.produces<edm::DetSetVector<PixelDigiSimLink> >().setBranchAlias(alias + "siPixelDigiSimLink");
     edm::Service<edm::RandomNumberGenerator> rng;
     if ( ! rng.isAvailable()) {
       throw cms::Exception("Configuration")
@@ -233,8 +232,8 @@ namespace cms
       outputlink(new edm::DetSetVector<PixelDigiSimLink>(theDigiLinkVector) );
 
     // Step D: write output to file 
-    iEvent.put(output, instance);
-    iEvent.put(outputlink, instance);
+    iEvent.put(output);
+    iEvent.put(outputlink);
   }
 
 
