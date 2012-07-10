@@ -175,6 +175,8 @@ SiPixelDigitizerAlgorithm::SiPixelDigitizerAlgorithm(const edm::ParameterSet& co
   // Pixel threshold in electron units.
   theThresholdInE_FPix=conf_.getParameter<double>("ThresholdInElectrons_FPix");
   theThresholdInE_BPix=conf_.getParameter<double>("ThresholdInElectrons_BPix");
+  //Carlotta" enables different threshold in layer 1 when we have smaller pixel pitch  //-CPC: someone change this line
+  theThresholdInE_BPix_L1=conf_.getParameter<double>("ThresholdInElectrons_BPix_L1");
 
   // Add threshold gaussian smearing:
   addThresholdSmearing = conf_.getParameter<bool>("AddThresholdSmearing");
@@ -310,7 +312,21 @@ SiPixelDigitizerAlgorithm::SiPixelDigitizerAlgorithm(const edm::ParameterSet& co
       thePixelColEfficiency[0] = 1.-0.034; // 3.4% for r=4 only
       thePixelEfficiency[0]    = 1.-0.015; // 1.5% for r=4
     }
-    
+    if(thePixelLuminosity==20) { // For 2e34 cm-2s-1 and 25ns bunch crossing
+      thePixelColEfficiency[0] = 1.-0.16;
+      thePixelColEfficiency[1] = 1.-0.058;
+      thePixelColEfficiency[2] = 1.-0.03;
+      thePixelColEfficiency[3] = 1.-0.03;
+      thePixelColEfficiency[4] = 1.-0.03;
+    }
+   if(thePixelLuminosity==30) { // For 2e34 cm-2s-1 and 50ns bunch crossing
+     thePixelColEfficiency[0] = 1.-0.50;
+     thePixelColEfficiency[1] = 1.-0.182;
+     thePixelColEfficiency[2] = 1.-0.093;
+     thePixelColEfficiency[3] = 1.-0.093;
+     thePixelColEfficiency[4] = 1.-0.093;
+   }
+
   } // end the pixel inefficiency part
 
   // Init the random number services  
@@ -331,6 +347,8 @@ SiPixelDigitizerAlgorithm::SiPixelDigitizerAlgorithm(const edm::ParameterSet& co
     if(addThresholdSmearing) {
       smearedThreshold_FPix_ = new CLHEP::RandGaussQ(rndEngine, theThresholdInE_FPix , theThresholdSmearing_FPix);
       smearedThreshold_BPix_ = new CLHEP::RandGaussQ(rndEngine, theThresholdInE_BPix , theThresholdSmearing_BPix);
+      //Carlotta //CPC--someone change
+      smearedThreshold_BPix_L1_ = new CLHEP::RandGaussQ(rndEngine, theThresholdInE_BPix_L1 , theThresholdSmearing_BPix);
     }
     } //end Init the random number services
 
@@ -448,6 +466,8 @@ SiPixelDigitizerAlgorithm::~SiPixelDigitizerAlgorithm() {
   if(addThresholdSmearing) {
     delete smearedThreshold_FPix_;
     delete smearedThreshold_BPix_;
+    //Carlotta
+    delete smearedThreshold_BPix_L1_;
   }
 
   if(addNoise) delete theNoiser;
@@ -512,14 +532,26 @@ vector<PixelDigi> SiPixelDigitizerAlgorithm::digitize(PixelGeomDetUnit *det){
     // Find the threshold in noise units, needed for the noiser.
 
   unsigned int Sub_detid=DetId(detID).subdetId();
+  //Carlotta
+  int lay = 0;
+  lay = PXBDetId(detID).layer();
 
   if(theNoiseInElectrons>0.){
     if(Sub_detid == PixelSubdetector::PixelBarrel){ // Barrel modules
-      if(addThresholdSmearing) { 
-	thePixelThresholdInE = smearedThreshold_BPix_->fire(); // gaussian smearing 
+      if(addThresholdSmearing) {
+        //Start of Carlotta's addition  //-CPC: Someone's change
+        if (lay == 1)  { thePixelThresholdInE = smearedThreshold_BPix_L1_->fire(); } // gaussian smearing
+        else { thePixelThresholdInE = smearedThreshold_BPix_->fire(); } // gaussian smearing
       } else {
-	thePixelThresholdInE = theThresholdInE_BPix; // no smearing
+        if (lay == 1) { thePixelThresholdInE = theThresholdInE_BPix_L1; } //no smearing
+        else { thePixelThresholdInE = theThresholdInE_BPix; } // no smearing
+        //End of Carlotta's addition
       }
+      //if(addThresholdSmearing) { 
+      //  thePixelThresholdInE = smearedThreshold_BPix_->fire(); // gaussian smearing 
+      //} else {
+      //  thePixelThresholdInE = theThresholdInE_BPix; // no smearing
+      //}
       
       thePixelThreshold = thePixelThresholdInE/theNoiseInElectrons; 
       
