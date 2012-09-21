@@ -369,11 +369,16 @@ SiPixelDigitizerAlgorithm::PixelEfficiencies::PixelEfficiencies(const edm::Param
 		     // Only try to read in 4th barrel layer if there are 4 or more of them
 		     if (NumberOfBarrelLayers>=4){thePixelColEfficiency[i++] = conf.getParameter<double>("thePixelColEfficiency_BPix4");}
  	  	     thePixelColEfficiency[FPixIndex] = conf.getParameter<double>("thePixelColEfficiency_FPix1");
- 	  	     thePixelColEfficiency[FPixIndex+1] = conf.getParameter<double>("thePixelColEfficiency_FPix2"); // Not used, but leave it in in case we want use it to later
+ 	  	     //thePixelColEfficiency[FPixIndex+1] = conf.getParameter<double>("thePixelColEfficiency_FPix2"); // Not used, but leave it in in case we want use it to later
+                     //thePixelColEfficiency[FPixIndex+2] = conf.getParameter<double>("thePixelColEfficiency_FPix3"); // Not used, but leave it in in case we want use it to later
  	  	     //std::cout<<"\nReading in custom Pixel efficiencies "<<thePixelColEfficiency[0]<<" , "<<thePixelColEfficiency[1]<<" , "
  	  	     //              <<thePixelColEfficiency[2]<<" , "<<thePixelColEfficiency[3]<<" , "<<thePixelColEfficiency[4]<<"\n";
  	  	     //if (thePixelColEfficiency[0]<=0.5) {std::cout <<"\n\nDid you mean to set the Pixel efficiency at "<<thePixelColEfficiency[0]
  	  	     //                                              <<", or did you mean for this to be the inefficiency?\n\n\n";}
+		     for (int j=0; j<NumberOfTotLayers;j++) { // Now set the other two at 100%
+		       thePixelEfficiency[j]     = 1.;  // pixels = 100%
+		       thePixelChipEfficiency[j] = 1.; // chips = 100%
+		       }
  	  	     }
   // the first "NumberOfBarrelLayers" settings [0],[1], ... are for the barrel pixels
   // the next  "NumberOfEndcapDisks"  settings [NumberOfBarrelLayers+1],[NumberOfBarrelLayers+2], ... are for the endcaps (undecided how)
@@ -543,7 +548,7 @@ void SiPixelDigitizerAlgorithm::digitize(const PixelGeomDetUnit* pixdet,
 
     // Do only if needed
 
-    if((thePixelLuminosity>=0) && (theSignal.size()>0))
+    if(((thePixelLuminosity>=0)||(thePixelLuminosity==-20)) && (theSignal.size()>0))
       pixel_inefficiency(pixelEfficiencies_, pixdet); // Kill some pixels
 
     if(use_ineff_from_db_ && (theSignal.size()>0))
