@@ -257,9 +257,6 @@ class SiPixelDigitizerAlgorithm  {
 
     // Variables 
     //external parameters 
-    const int NumberOfBarrelLayers;	// Default = 3 now upto 8
-    const int NumberOfEndcapDisks;  	// Default = 3
-
     // go from Geant energy GeV to number of electrons
     const float GeVperElectron; // 3.7E-09 
     
@@ -272,6 +269,10 @@ class SiPixelDigitizerAlgorithm  {
  
     //-- induce_signal
     const float ClusterWidth;       // Gaussian charge cutoff width in sigma units
+    //-- Allow for upgrades
+    const int NumberOfBarrelLayers;     // Default = 3
+    const int NumberOfEndcapDisks;      // Default = 2
+
     //-- make_digis 
     const float theElectronPerADC;     // Gain, number of electrons per adc count.
     const int theAdcFullScale;         // Saturation count, 255=8bit.
