@@ -143,8 +143,8 @@ SiPixelDigitizerAlgorithm::SiPixelDigitizerAlgorithm(const edm::ParameterSet& co
   // get external parameters:
   // To account for upgrade geometries do not assume the number 
   // of layers or disks.
-  NumberOfBarrelLayers(conf.getParameter<int>("NumPixelBarrel")),
-  NumberOfEndcapDisks(conf.getParameter<int>("NumPixelEndcap")),
+  NumberOfBarrelLayers(conf.exists("NumPixelBarrel")?conf.getParameter<int>("NumPixelBarrel"):3),
+  NumberOfEndcapDisks(conf.exists("NumPixelEndcap")?conf.getParameter<int>("NumPixelEndcap"):2),
 
   // ADC calibration 1adc count(135e.
   // Corresponds to 2adc/kev, 270[e/kev]/135[e/adc](2[adc/kev]
@@ -156,8 +156,8 @@ SiPixelDigitizerAlgorithm::SiPixelDigitizerAlgorithm(const edm::ParameterSet& co
   // ADC saturation value, 255(8bit adc.
   //theAdcFullScale(conf.getUntrackedParameter<int>("AdcFullScale",255)),
   theAdcFullScale(conf.getParameter<int>("AdcFullScale")),
-  theAdcFullScaleStack(conf.getParameter<int>("AdcFullScaleStack")),
-  theFirstStackLayer(conf.getParameter<int>("FirstStackLayer")),
+  theAdcFullScaleStack(conf.exists("AdcFullScaleStack")?conf.getParameter<int>("AdcFullScaleStack"):255),
+  theFirstStackLayer(conf.exists("FirstStackLayer")?conf.getParameter<int>("FirstStackLayer"):5),
 
   // Noise in electrons:
   // Pixel cell noise, relevant for generating noisy pixels
@@ -172,12 +172,12 @@ SiPixelDigitizerAlgorithm::SiPixelDigitizerAlgorithm(const edm::ParameterSet& co
   // Pixel threshold in electron units.
   theThresholdInE_FPix(conf.getParameter<double>("ThresholdInElectrons_FPix")),
   theThresholdInE_BPix(conf.getParameter<double>("ThresholdInElectrons_BPix")),
-  theThresholdInE_BPix_L1(conf.getParameter<double>("ThresholdInElectrons_BPix_L1")),
+  theThresholdInE_BPix_L1(conf.exists("ThresholdInElectrons_BPix_L1")?conf.getParameter<double>("ThresholdInElectrons_BPix_L1"):theThresholdInE_BPix),
 
   // Add threshold gaussian smearing:
   theThresholdSmearing_FPix(conf.getParameter<double>("ThresholdSmearing_FPix")),
   theThresholdSmearing_BPix(conf.getParameter<double>("ThresholdSmearing_BPix")),
-  theThresholdSmearing_BPix_L1(conf.getParameter<double>("ThresholdSmearing_BPix_L1")),
+  theThresholdSmearing_BPix_L1(conf.exists("ThresholdSmearing_BPix_L1")?conf.getParameter<double>("ThresholdSmearing_BPix_L1"):theThresholdSmearing_BPix),
 
   // electrons to VCAL conversion needed in misscalibrate()
   electronsPerVCAL(conf.getParameter<double>("ElectronsPerVcal")),
